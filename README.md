@@ -10,6 +10,12 @@ To load custom characters instead:
 - Use `pnpm start --characters="path/to/your/character.json"`
 - Multiple character files can be loaded simultaneously
 
+Knowledge includes
+o Sovereign Individual 
+Information a history 
+internet of Money
+How Information Grows
+
 ### Add clients
 ```
 # in character.ts
