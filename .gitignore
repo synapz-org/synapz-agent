@@ -1,21 +1,61 @@
-# Secrets (credentials stored outside repo)
+# ============================================
+# SECURITY: Never commit secrets to this repo
+# ============================================
+
+# Credentials and secrets
 *.secret
 *.key
+*.pem
+*.p12
 credentials.json
+credentials.yaml
+.env
+.env.*
+!.env.example
 
-# State files that shouldn't be versioned
+# API keys and tokens (catch common patterns)
+**/secrets/
+**/private/
+.private/
+
+# Wallet/crypto
+*.seed
+*.mnemonic
+wallet.json
+keystore/
+
+# State files (may contain sensitive conversation data)
 state-history.json
+*.state.json
+
+# Session data (contains conversation history)
+sessions/
+*.session
+*.jsonl
 
 # OS files
 .DS_Store
 Thumbs.db
-
-# Editor
 *.swp
 *.swo
+*~
+
+# Editors
 .idea/
 .vscode/
+*.sublime-*
 
-# Node (if any scripts use it)
+# Node
 node_modules/
-.private/
+npm-debug.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Build artifacts
+dist/
+build/
+*.log
