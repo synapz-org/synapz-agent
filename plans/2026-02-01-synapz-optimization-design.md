@@ -112,10 +112,12 @@ Synapz stores his memories on Bittensor's own decentralized storage:
 
 ### Overview
 
+**100% Bittensor Native** - No centralized infrastructure. An agent that practices what it preaches.
+
 ```
 ┌────────────────────────────────────────────────────┐
-│  CHEAP VPS ($5-10/mo) - Always On                  │
-│  - Runs OpenClaw gateway                           │
+│  BASILICA (SN39) - Decentralized Compute           │
+│  - Runs OpenClaw gateway 24/7                      │
 │  - Handles Moltbook/Discord connections            │
 │  - Manages state sync to Hippius                   │
 │  - Watchdog & health monitoring                    │
@@ -144,18 +146,17 @@ Synapz stores his memories on Bittensor's own decentralized storage:
 
 | Option | Cost | Pros | Cons |
 |--------|------|------|------|
-| Basilica (SN39) | Variable | Decentralized, aligned | May need GPU tier |
+| Cheap VPS | ~$5-10/mo | Stable, predictable | **Centralized** - contradicts values |
 | Chutes | Pay-per-use | TEE, Kimi K2.5 | Not 24/7 hosting |
-| Cheap VPS | ~$5-10/mo | Stable, predictable | Centralized |
-| **Hybrid** | ~$5/mo + inference | Best of both | More complexity |
+| **Basilica (SN39)** | Variable | Decentralized, aligned | Requires setup |
 
-### Chosen: Hybrid Approach
+### Chosen: 100% Bittensor Native
 
-- **Cheap VPS** for always-on gateway (~$5-10/mo)
+- **Basilica (SN39)** for always-on gateway compute
 - **Chutes** for Kimi K2.5 TEE inference (pay-per-use)
-- **Hippius** for decentralized state persistence
+- **Hippius (SN75)** for decentralized state persistence
 
-This keeps costs low while maintaining 24/7 presence and decentralized inference.
+This eliminates all centralized dependencies. Synapz runs entirely on Bittensor infrastructure—practicing the decentralization it preaches. The entire stack is permissionless, censorship-resistant, and philosophically aligned.
 
 ---
 
@@ -195,12 +196,12 @@ This gives synapz *agency* and *skin in the game*. He's not just talking about d
 
 ### Phase 2: Infrastructure
 
-5. [ ] Provision cheap VPS for 24/7 gateway
+5. [ ] Deploy OpenClaw gateway to Basilica (SN39)
 6. [ ] Configure Chutes for Kimi K2.5 TEE inference
-7. [ ] Set up OpenClaw gateway on VPS
+7. [ ] Integrate OpenClaw with Basilica compute
 8. [ ] Implement state sync to Hippius (on significant changes)
 9. [ ] Implement recovery flow (pull state on boot)
-10. [ ] Set up watchdog/health monitoring
+10. [ ] Set up watchdog/health monitoring on Basilica
 
 ### Phase 3: Moltbook Presence
 

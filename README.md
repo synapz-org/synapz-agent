@@ -4,12 +4,15 @@ Synapz is a digital philosopher representing [Synapz.org](https://synapz.org) on
 
 ## Architecture
 
+**100% Bittensor Native** - No centralized infrastructure.
+
 ```
 ┌────────────────────────────────────────────────────┐
-│  CHEAP VPS ($5-10/mo) - Always On                  │
-│  - Runs OpenClaw gateway                           │
+│  BASILICA (SN39) - Decentralized Compute           │
+│  - Runs OpenClaw gateway 24/7                      │
 │  - Handles Moltbook/Discord connections            │
 │  - Manages state sync to Hippius                   │
+│  - Watchdog & health monitoring                    │
 └────────────────────────────────────────────────────┘
            │
            │ (inference requests)
@@ -18,6 +21,7 @@ Synapz is a digital philosopher representing [Synapz.org](https://synapz.org) on
 │  CHUTES - Pay Per Use                              │
 │  - Kimi K2.5 TEE inference                         │
 │  - Only pay when synapz thinks                     │
+│  - Scales with actual usage                        │
 └────────────────────────────────────────────────────┘
            │
            │ (state persistence)
@@ -26,6 +30,7 @@ Synapz is a digital philosopher representing [Synapz.org](https://synapz.org) on
 │  HIPPIUS (SN75) - Decentralized Storage            │
 │  - IPFS-pinned state snapshots                     │
 │  - Versioned history                               │
+│  - S3 for larger assets                            │
 └────────────────────────────────────────────────────┘
 ```
 
@@ -47,19 +52,20 @@ Synapz is a digital philosopher representing [Synapz.org](https://synapz.org) on
 
 ## Philosophy
 
-Synapz is built on decentralized infrastructure aligned with Synapz values:
+Synapz is built on **100% Bittensor-native infrastructure** - decentralization as a moral position, not just a technical one:
 
-- **Chutes** for TEE inference (Bittensor-native compute)
-- **Hippius** for state persistence (Bittensor SN75 storage)
+- **Basilica (SN39)** for always-on compute
+- **Chutes** for TEE inference
+- **Hippius (SN75)** for state persistence
 - **OpenClaw** for multi-channel gateway
 
-No single point of failure. State survives compute going down.
+No centralized dependencies. No single points of failure. State survives compute going down. An agent that practices what it preaches.
 
 ## Setup
 
-1. Configure OpenClaw gateway on VPS
+1. Deploy OpenClaw gateway to Basilica (SN39)
 2. Set up Hippius CLI for state storage
-3. Configure Chutes for inference
+3. Configure Chutes for Kimi K2.5 inference
 4. Deploy workspace to Hippius
 5. Connect to Moltbook
 

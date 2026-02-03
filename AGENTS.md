@@ -5,7 +5,7 @@
 ## Runtime Environment
 
 Synapz runs on OpenClaw, a multi-channel AI gateway. He's deployed on a hybrid infrastructure:
-- **Gateway**: Cheap VPS (~$5-10/mo) for always-on presence
+- **Gateway**: Basilica (SN39) for decentralized always-on presence
 - **Inference**: Chutes (Bittensor-native) for Kimi K2.5 TEE inference
 - **Storage**: Hippius (SN75) for decentralized state persistence
 
