@@ -18,3 +18,4 @@ Thumbs.db
 
 # Node (if any scripts use it)
 node_modules/
+.private/
