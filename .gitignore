@@ -1,0 +1,20 @@
+# Secrets (credentials stored outside repo)
+*.secret
+*.key
+credentials.json
+
+# State files that shouldn't be versioned
+state-history.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Node (if any scripts use it)
+node_modules/
