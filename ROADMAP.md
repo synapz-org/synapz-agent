@@ -7,16 +7,21 @@ Ideas for evolving your OpenClaw agent with Bittensor integrations.
 - [x] Define personality (SOUL.md)
 - [x] Define presentation (IDENTITY.md)
 - [x] Document interests and knowledge
-- [ ] Connect to messaging channels (Telegram, etc.)
+- [x] Connect to messaging channels (Telegram)
 - [ ] Establish social presence (Moltbook)
 
 ## 24/7 Availability
 
 Run your agent continuously without keeping your laptop open.
 
-- **Basilica containers**: Deploy your agent as a Docker container
-- **Hippius state sync**: Persist memory to decentralized storage
-- **Auto-updates**: Watchtower pulls new versions automatically
+- [x] **Docker image**: `dwbarnes/synapz-agent:v7` on Docker Hub (amd64)
+- [x] **Dockerfile + entrypoint**: Working container with mDNS/ciao K8s patch
+- [x] **Basilica Summons deploy**: Container runs, health checks pass
+- [ ] **Basilica egress networking**: Summons tier blocks outbound internet (see DEPLOYMENT-STATUS.md)
+- [ ] **Hippius state sync**: Persist memory to decentralized storage
+- [ ] **Auto-updates**: Watchtower pulls new versions automatically
+
+**Current status**: Running locally via Docker. Basilica deployment blocked on egress networking.
 
 See: [openclaw-bittensor/extensions/basilica](https://github.com/synapz-org/openclaw-bittensor)
 
