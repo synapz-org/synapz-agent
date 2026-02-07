@@ -32,14 +32,14 @@ Register Synapz in the on-chain agent discovery ecosystem without changing how t
 - [x] **Research ERC-8004 spec**: Understand identity, reputation, and validation registries
 - [x] **Create registration file**: `erc-8004/registration.json` with agent metadata
 - [x] **Create registration scripts**: Pin to IPFS via Hippius, register on Sepolia, update URI
-- [ ] **Get Sepolia ETH**: Fund `synapz.eth` wallet from a faucet
-- [ ] **Pin registration to IPFS**: `npm run pin-registration` in `erc-8004/`
-- [ ] **Register on Sepolia testnet**: `npm run register` in `erc-8004/`
-- [ ] **Verify registration**: Confirm agent appears in identity registry on Etherscan
+- [x] **Get Sepolia ETH**: Fund wallet from a faucet
+- [x] **Pin registration to IPFS**: Pinned via Hippius (`bafkreiaeqs3egjwoia3ddx4bkbcsndul6rmmnf2iowhallotyz4gn2afki`)
+- [x] **Register on Sepolia testnet**: Agent ID **953** ([tx](https://sepolia.etherscan.io/tx/0xdc9e25db0837bfd9f1acc17361c104e0c32ad5fe2cbe04cd0a0b09d7826d4a2b))
+- [x] **Update on-chain URI**: Registration file with agent ID re-pinned and URI updated
 - [ ] **Add service endpoints**: MCP/A2A endpoints once Basilica egress is resolved
-- [ ] **Mainnet migration**: Register on Ethereum mainnet or L2 after testnet verification
+- [x] **Mainnet registration**: Agent ID **23180** on Ethereum mainnet ([tx](https://etherscan.io/tx/0x6abd2e0bc13274195b40241e4068dc79d4d30aebf206c9b7397cc6e1bb92d061))
 
-**Current status**: Registration tooling ready. Awaiting Sepolia ETH and manual execution.
+**Current status**: Registered on mainnet as agent #23180. Endpoints pending Basilica egress resolution.
 
 See: [erc-8004/](erc-8004/) for scripts and registration file.
 

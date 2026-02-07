@@ -12,8 +12,8 @@
   "active": false,
   "registrations": [
     {
-      "agentRegistry": "eip155:11155111:0x8004A818BFB912233c491871b3d84c89A494BD9e",
-      "agentId": "953"
+      "agentRegistry": "eip155:1:0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+      "agentId": "23180"
     }
   ],
   "supportedTrust": [

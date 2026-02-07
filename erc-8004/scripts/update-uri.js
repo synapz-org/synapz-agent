@@ -24,21 +24,21 @@ const CONTRACTS = {
   },
   mainnet: {
     identityRegistry: '0x8004A169FB4a3325136EB29fA0ceB6D2e539a432',
-    reputationRegistry: '0x8004B663056A597Dffe9eCcC1965A193B7388713',
-    validationRegistry: '0x8004Cb1BF31DAf7788923b405b754f57acEB4272',
+    reputationRegistry: '0x8004BAa17C55a88189AE136b182e5fdA19dE9b63',
+    validationRegistry: null,
     chainId: 1,
   },
 };
 
 async function main() {
   const network = process.env.NETWORK || 'sepolia';
-  const rpcUrl = process.env.SEPOLIA_RPC_URL;
+  const rpcUrl = process.env.RPC_URL || process.env.SEPOLIA_RPC_URL;
   const privateKey = process.env.PRIVATE_KEY;
   const agentId = process.env.AGENT_ID;
   const agentUri = process.env.AGENT_URI;
 
   if (!rpcUrl || !privateKey || !agentId || !agentUri) {
-    console.error('Error: SEPOLIA_RPC_URL, PRIVATE_KEY, AGENT_ID, and AGENT_URI must be set in .env');
+    console.error('Error: RPC_URL, PRIVATE_KEY, AGENT_ID, and AGENT_URI must be set in .env');
     process.exit(1);
   }
 
