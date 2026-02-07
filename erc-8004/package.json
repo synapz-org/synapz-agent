@@ -10,8 +10,9 @@
     "pin-registration": "node scripts/pin-registration.js"
   },
   "dependencies": {
+    "dotenv": "^16.0.0",
     "erc-8004-js": "^2.0.1",
     "ethers": "^6.0.0",
-    "dotenv": "^16.0.0"
+    "viem": "^2.45.1"
   }
 }
