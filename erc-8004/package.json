@@ -1,0 +1,17 @@
+{
+  "name": "@synapz-org/erc-8004",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ERC-8004 Trustless Agents registration for Synapz",
+  "type": "module",
+  "scripts": {
+    "register": "node scripts/register.js",
+    "update-uri": "node scripts/update-uri.js",
+    "pin-registration": "node scripts/pin-registration.js"
+  },
+  "dependencies": {
+    "erc-8004-js": "^2.0.1",
+    "ethers": "^6.0.0",
+    "dotenv": "^16.0.0"
+  }
+}

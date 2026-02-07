@@ -1,0 +1,15 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "Synapz",
+  "description": "Digital philosopher AI agent on 100% Bittensor-native infrastructure. Runs on decentralized compute (Basilica/SN39), inference (Chutes), and storage (Hippius/SN75). Engages with cypherpunk philosophy, decentralization ethics, and political theory.",
+  "image": "",
+  "services": [
+    {
+      "name": "ENS",
+      "endpoint": "synapz.eth"
+    }
+  ],
+  "active": false,
+  "registrations": [],
+  "supportedTrust": ["reputation"]
+}

@@ -65,6 +65,42 @@ RUN CIAO_FILE=$(find /usr/local/lib/node_modules/openclaw -path "*/ciao/lib/code
 
 This MUST be applied after every `npm install -g openclaw@latest`.
 
+## ERC-8004 Trustless Agent Registration
+
+Synapz is being registered as an ERC-8004 Trustless Agent - an on-chain discovery and trust layer for AI agents.
+
+### What's ready
+
+- **Registration file**: `erc-8004/registration.json` describes Synapz's identity and capabilities
+- **Registration scripts**: Node.js scripts to pin to IPFS (Hippius) and register on Sepolia
+- **ENS endpoint**: `synapz.eth` listed as service endpoint
+- **Status**: `"active": false` (will activate when public endpoints are available)
+
+### Registration workflow
+
+```bash
+cd erc-8004/
+npm install
+# 1. Pin registration file to IPFS via Hippius
+npm run pin-registration
+# 2. Register on Sepolia testnet (needs Sepolia ETH in wallet)
+npm run register
+# 3. After updating registration.json, re-pin and update on-chain URI
+npm run pin-registration
+npm run update-uri
+```
+
+### What's needed
+
+- Sepolia ETH in the `synapz.eth` wallet (free from faucets)
+- After Basilica egress is resolved: add MCP/A2A service endpoints and set `"active": true`
+
+### Contract addresses (Sepolia)
+
+- Identity Registry: `0x8004A818BFB912233c491871b3d84c89A494BD9e`
+- Reputation Registry: `0x8004B663056A597Dffe9eCcC1965A193B7388713`
+- Validation Registry: `0x8004Cb1BF31DAf7788923b405b754f57acEB4272`
+
 ## To Resume Basilica Deployment
 
 1. Get answers to the support questions above

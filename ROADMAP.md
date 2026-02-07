@@ -25,6 +25,24 @@ Run your agent continuously without keeping your laptop open.
 
 See: [openclaw-bittensor/extensions/basilica](https://github.com/synapz-org/openclaw-bittensor)
 
+## ERC-8004 Trustless Agent Registration
+
+Register Synapz in the on-chain agent discovery ecosystem without changing how the agent works internally.
+
+- [x] **Research ERC-8004 spec**: Understand identity, reputation, and validation registries
+- [x] **Create registration file**: `erc-8004/registration.json` with agent metadata
+- [x] **Create registration scripts**: Pin to IPFS via Hippius, register on Sepolia, update URI
+- [ ] **Get Sepolia ETH**: Fund `synapz.eth` wallet from a faucet
+- [ ] **Pin registration to IPFS**: `npm run pin-registration` in `erc-8004/`
+- [ ] **Register on Sepolia testnet**: `npm run register` in `erc-8004/`
+- [ ] **Verify registration**: Confirm agent appears in identity registry on Etherscan
+- [ ] **Add service endpoints**: MCP/A2A endpoints once Basilica egress is resolved
+- [ ] **Mainnet migration**: Register on Ethereum mainnet or L2 after testnet verification
+
+**Current status**: Registration tooling ready. Awaiting Sepolia ETH and manual execution.
+
+See: [erc-8004/](erc-8004/) for scripts and registration file.
+
 ## Real-time Awareness
 
 Give your agent awareness of current events and discussions.
