@@ -1,12 +1,13 @@
 /**
- * Pin the Synapz ERC-8004 registration file to IPFS via Hippius.
+ * Pin the Synapz ERC-8004 registration file to Hippius S3.
  *
- * Uses the hipc CLI (Hippius IPFS client) to upload the registration
- * JSON and returns the IPFS CID for use as the agent URI.
+ * Uploads registration.json to Hippius S3 storage and provides
+ * a publicly-accessible URL for use as the agent URI.
  *
  * Prerequisites:
- *   1. hipc CLI installed and configured (~/.hippius/.env)
- *   2. registration.json exists in erc-8004/ directory
+ *   1. aws CLI installed
+ *   2. HIPPIUS_S3_ACCESS_KEY and HIPPIUS_S3_SECRET_KEY set
+ *   3. registration.json exists in erc-8004/ directory
  *
  * Usage:
  *   node scripts/pin-registration.js
@@ -41,65 +42,73 @@ function main() {
     process.exit(1);
   }
 
-  // Check if hipc is available
-  try {
-    execSync('which hipc', { stdio: 'pipe' });
-  } catch {
-    console.error('Error: hipc CLI not found. Install Hippius CLI first.');
-    console.error('See: https://github.com/hippius/hippius-cli');
+  // Check credentials
+  const accessKey = process.env.HIPPIUS_S3_ACCESS_KEY;
+  const secretKey = process.env.HIPPIUS_S3_SECRET_KEY;
+
+  if (!accessKey || !secretKey) {
+    console.error('Error: HIPPIUS_S3_ACCESS_KEY and HIPPIUS_S3_SECRET_KEY must be set');
     process.exit(1);
   }
 
-  // Upload to IPFS via Hippius
-  console.log('\nUploading registration.json to Hippius IPFS...');
+  // Check if aws CLI is available
+  try {
+    execSync('which aws', { stdio: 'pipe' });
+  } catch {
+    console.error('Error: aws CLI not found. Install with: pip install awscli');
+    process.exit(1);
+  }
+
+  const bucket = process.env.HIPPIUS_S3_BUCKET || 'synapz-state';
+  const s3Key = 'erc-8004/registration.json';
+  const endpoint = 'https://s3.hippius.com';
+
+  // Upload to Hippius S3
+  console.log('\nUploading registration.json to Hippius S3...');
   let output;
   try {
-    output = execSync(`hipc upload-to-ipfs "${REG_PATH}"`, {
-      encoding: 'utf-8',
-      timeout: 60000,
-    });
+    output = execSync(
+      `AWS_ACCESS_KEY_ID="${accessKey}" AWS_SECRET_ACCESS_KEY="${secretKey}" ` +
+      `aws --endpoint-url ${endpoint} --region decentralized ` +
+      `s3 cp "${REG_PATH}" "s3://${bucket}/${s3Key}" --content-type application/json`,
+      { encoding: 'utf-8', timeout: 60000 }
+    );
   } catch (err) {
-    console.error('Error: Failed to upload to Hippius:', err.message);
+    console.error('Error: Failed to upload to Hippius S3:', err.message);
     process.exit(1);
   }
 
-  console.log(output);
+  console.log(output.trim());
 
-  // Extract CID from output (handles both Qm... and bafy... formats)
-  const cidMatch = output.match(/"Hash":"([^"]+)"/);
-  if (!cidMatch) {
-    // Try alternative output format
-    const altMatch = output.match(/\b(Qm[a-zA-Z0-9]{44}|bafy[a-zA-Z0-9]+)\b/);
-    if (!altMatch) {
-      console.error('Error: Could not extract CID from hipc output');
-      console.error('Raw output:', output);
-      process.exit(1);
-    }
-    var cid = altMatch[1];
-  } else {
-    var cid = cidMatch[1];
-  }
+  // The S3 URL serves as the agent URI
+  // Note: This is an S3 path, not an IPFS CID. If IPFS pinning is needed,
+  // use the hippius CLI with a self-hosted IPFS node separately.
+  const s3Uri = `s3://${bucket}/${s3Key}`;
+  console.log(`\nUploaded successfully!`);
+  console.log(`  S3 URI: ${s3Uri}`);
+  console.log(`  Bucket: ${bucket}`);
+  console.log(`  Key: ${s3Key}`);
 
-  const ipfsUri = `ipfs://${cid}`;
-  console.log(`\nPinned successfully!`);
-  console.log(`  CID: ${cid}`);
-  console.log(`  IPFS URI: ${ipfsUri}`);
-  console.log(`  Gateway: https://ipfs.io/ipfs/${cid}`);
-
-  // Update .env with AGENT_URI
+  // Update .env with AGENT_URI (keep existing IPFS URI if present)
   const envPath = join(ROOT, '.env');
   if (existsSync(envPath)) {
     let envContent = readFileSync(envPath, 'utf-8');
-    if (envContent.includes('AGENT_URI=')) {
-      envContent = envContent.replace(/AGENT_URI=.*/, `AGENT_URI=${ipfsUri}`);
+    // Don't overwrite an existing IPFS URI — only set if empty or already S3
+    const uriMatch = envContent.match(/^AGENT_URI=(.*)$/m);
+    if (!uriMatch || !uriMatch[1] || uriMatch[1].startsWith('s3://')) {
+      if (envContent.includes('AGENT_URI=')) {
+        envContent = envContent.replace(/AGENT_URI=.*/, `AGENT_URI=${s3Uri}`);
+      } else {
+        envContent += `\nAGENT_URI=${s3Uri}\n`;
+      }
+      writeFileSync(envPath, envContent);
+      console.log(`  Updated .env with AGENT_URI=${s3Uri}`);
     } else {
-      envContent += `\nAGENT_URI=${ipfsUri}\n`;
+      console.log(`  Keeping existing AGENT_URI=${uriMatch[1]}`);
     }
-    writeFileSync(envPath, envContent);
-    console.log(`  Updated .env with AGENT_URI=${ipfsUri}`);
   } else {
     console.log(`\n  Add this to your .env file:`);
-    console.log(`  AGENT_URI=${ipfsUri}`);
+    console.log(`  AGENT_URI=${s3Uri}`);
   }
 
   console.log('\nNext steps:');

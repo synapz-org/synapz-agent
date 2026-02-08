@@ -1,66 +1,70 @@
 #!/bin/bash
-# Restore synapz workspace state from Hippius (SN75)
-# Requires: hipc CLI installed and configured
+# Restore synapz workspace state from Hippius S3 (SN75)
+# Requires: aws CLI configured with Hippius S3 credentials
+#
+# Usage:
+#   ./restore-from-hippius.sh                    # Restore latest snapshot
+#   ./restore-from-hippius.sh <s3-key>           # Restore specific snapshot
+#
+# Environment variables:
+#   HIPPIUS_S3_ACCESS_KEY  - Hippius S3 access key (hip_xxx format)
+#   HIPPIUS_S3_SECRET_KEY  - Hippius S3 secret key
+#   HIPPIUS_S3_BUCKET      - S3 bucket name (default: synapz-state)
 
 set -e
 
-# Source Hippius environment
-if [ -f ~/.hippius/.env ]; then
-    source ~/.hippius/.env
-fi
-
-WORKSPACE_DIR="$(dirname "$0")/.."
+WORKSPACE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 STATE_HISTORY="$WORKSPACE_DIR/state-history.json"
+BUCKET="${HIPPIUS_S3_BUCKET:-synapz-state}"
+S3_ENDPOINT="https://s3.hippius.com"
 
-# Get CID from argument or latest from history
-if [ -n "$1" ]; then
-    CID="$1"
-    echo "Restoring from specified CID: $CID"
-else
-    if [ ! -f "$STATE_HISTORY" ]; then
-        echo "Error: No state history found and no CID provided"
-        echo "Usage: $0 [CID]"
-        exit 1
-    fi
-
-    # Get latest CID from history
-    if command -v jq &> /dev/null; then
-        CID=$(jq -r '.[-1].cid' "$STATE_HISTORY")
-    else
-        echo "Error: jq required to read state history"
-        exit 1
-    fi
-
-    echo "Restoring from latest CID: $CID"
-fi
-
-# Download from IPFS
-echo "Downloading state from Hippius..."
-TARBALL="/tmp/synapz-restore-$CID.tar.gz"
-
-# Try multiple gateways
-GATEWAYS=(
-    "https://ipfs.io/ipfs"
-    "https://gateway.pinata.cloud/ipfs"
-    "https://cloudflare-ipfs.com/ipfs"
-)
-
-DOWNLOADED=false
-for GATEWAY in "${GATEWAYS[@]}"; do
-    echo "Trying $GATEWAY..."
-    if curl -L -o "$TARBALL" "$GATEWAY/$CID" 2>/dev/null; then
-        if [ -s "$TARBALL" ]; then
-            DOWNLOADED=true
-            echo "Downloaded from $GATEWAY"
-            break
-        fi
-    fi
-done
-
-if [ "$DOWNLOADED" = false ]; then
-    echo "Error: Failed to download state from any gateway"
+# Validate credentials
+if [ -z "$HIPPIUS_S3_ACCESS_KEY" ] || [ -z "$HIPPIUS_S3_SECRET_KEY" ]; then
+    echo "Error: HIPPIUS_S3_ACCESS_KEY and HIPPIUS_S3_SECRET_KEY must be set"
     exit 1
 fi
+
+if ! command -v aws &> /dev/null; then
+    echo "Error: aws CLI not found. Install with: pip install awscli"
+    exit 1
+fi
+
+export AWS_ACCESS_KEY_ID="$HIPPIUS_S3_ACCESS_KEY"
+export AWS_SECRET_ACCESS_KEY="$HIPPIUS_S3_SECRET_KEY"
+
+# Get S3 key from argument, state history, or use "latest"
+if [ -n "$1" ]; then
+    S3_KEY="$1"
+    echo "Restoring from specified key: $S3_KEY"
+else
+    # Try state history first
+    if [ -f "$STATE_HISTORY" ] && command -v jq &> /dev/null; then
+        S3_KEY=$(jq -r '.[-1].s3_key // empty' "$STATE_HISTORY")
+    fi
+
+    # Fall back to "latest" snapshot
+    if [ -z "$S3_KEY" ]; then
+        S3_KEY="snapshots/latest.tar.gz"
+        echo "Restoring from latest snapshot"
+    else
+        echo "Restoring from state history: $S3_KEY"
+    fi
+fi
+
+# Download from Hippius S3
+echo "Downloading state from Hippius S3..."
+TARBALL="/tmp/synapz-restore-$(date +%s).tar.gz"
+
+aws --endpoint-url "$S3_ENDPOINT" --region decentralized \
+    s3 cp "s3://$BUCKET/$S3_KEY" "$TARBALL" 2>&1
+
+if [ ! -s "$TARBALL" ]; then
+    echo "Error: Failed to download state from Hippius S3"
+    rm -f "$TARBALL"
+    exit 1
+fi
+
+echo "Downloaded from s3://$BUCKET/$S3_KEY"
 
 # Backup current state
 BACKUP_DIR="$WORKSPACE_DIR/.backup-$(date +%s)"
@@ -80,5 +84,5 @@ tar -xzf "$TARBALL" -C "$WORKSPACE_DIR"
 # Cleanup
 rm -f "$TARBALL"
 
-echo "State restored successfully from CID: $CID"
+echo "State restored successfully from: $S3_KEY"
 echo "Previous state backed up to: $BACKUP_DIR"
