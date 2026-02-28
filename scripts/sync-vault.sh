@@ -104,11 +104,11 @@ remove_checksum() {
 }
 
 s3cmd() {
-    aws --endpoint-url "$S3_ENDPOINT" --region decentralized s3 "$@" 2>&1
+    aws --endpoint-url "$S3_ENDPOINT" --region decentralized s3 "$@"
 }
 
 s3api() {
-    aws --endpoint-url "$S3_ENDPOINT" --region decentralized s3api "$@" 2>&1
+    aws --endpoint-url "$S3_ENDPOINT" --region decentralized s3api "$@"
 }
 
 # --- Push: Local -> S3 ---
@@ -134,10 +134,10 @@ do_push() {
             local s3_key="$S3_PREFIX/$rel_path"
             if s3cmd cp "$file" "s3://$BUCKET/$s3_key" >/dev/null; then
                 update_checksum "$rel_path" "$current_md5"
-                echo "  -> $rel_path"
+                echo "  ↑ $rel_path"
                 ((pushed++)) || true
             else
-                echo "  x Failed to push: $rel_path"
+                echo "  ✗ Failed to push: $rel_path"
             fi
         else
             ((skipped++)) || true
@@ -150,7 +150,7 @@ do_push() {
             local s3_key="$S3_PREFIX/$rel_path"
             if s3cmd rm "s3://$BUCKET/$s3_key" >/dev/null 2>&1; then
                 remove_checksum "$rel_path"
-                echo "  x Deleted from S3: $rel_path"
+                echo "  ✗ Deleted from S3: $rel_path"
                 ((deleted++)) || true
             fi
         fi
@@ -214,7 +214,7 @@ do_pull() {
             if [ "$local_md5" != "$stored" ] && [ -n "$stored" ]; then
                 # CONFLICT: Both local and remote changed since last sync
                 local conflict_file="${local_file%.md}.conflict.md"
-                echo "  !! CONFLICT: $rel_path"
+                echo "  ⚠ CONFLICT: $rel_path"
                 echo "    Local changed (md5: $local_md5) and remote changed (etag: $remote_etag)"
 
                 # Download remote version as .conflict.md
@@ -232,7 +232,7 @@ do_pull() {
                 mkdir -p "$(dirname "$local_file")"
                 s3cmd cp "s3://$BUCKET/$S3_PREFIX/$rel_path" "$local_file" >/dev/null
                 update_checksum "$rel_path" "$remote_etag"
-                echo "  <- $rel_path"
+                echo "  ↓ $rel_path"
                 ((pulled++)) || true
             fi
         else
@@ -240,7 +240,7 @@ do_pull() {
             mkdir -p "$(dirname "$local_file")"
             s3cmd cp "s3://$BUCKET/$S3_PREFIX/$rel_path" "$local_file" >/dev/null
             update_checksum "$rel_path" "$remote_etag"
-            echo "  <- $rel_path (new)"
+            echo "  ↓ $rel_path (new)"
             ((pulled++)) || true
         fi
     done <<< "$s3_listing"
@@ -250,7 +250,7 @@ do_pull() {
 
     if [ "$conflicts" -gt 0 ]; then
         echo ""
-        echo "!! $conflicts conflict(s) detected. Review .conflict.md files in Obsidian."
+        echo "⚠ $conflicts conflict(s) detected. Review .conflict.md files in Obsidian."
     fi
 }
 
