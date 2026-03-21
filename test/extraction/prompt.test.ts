@@ -38,15 +38,15 @@ describe('buildExtractionPrompt', () => {
   it('includes available repo names in the prompt', () => {
     const registry = loadRegistry();
     const prompt = buildExtractionPrompt(sampleMessages, registry);
-    expect(prompt).toContain('covenant-narrative');
-    expect(prompt).toContain('barry-music-site');
+    expect(prompt).toContain('covenant-communications');
+    expect(prompt).toContain('whats-tonight');
   });
 
   it('includes repo descriptions in the prompt', () => {
     const registry = loadRegistry();
     const prompt = buildExtractionPrompt(sampleMessages, registry);
     expect(prompt).toContain('Covenant brand content');
-    expect(prompt).toContain('Barry music artist website');
+    expect(prompt).toContain("Barry's music website");
   });
 
   it('requests JSON output with "tasks" field', () => {

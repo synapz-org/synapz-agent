@@ -3,8 +3,8 @@ import type { RepoRoute } from '../types.js';
 export function loadRegistry(): RepoRoute[] {
   return [
     {
-      repo: 'covenant-narrative',
-      owner: 'snarktank',
+      repo: 'covenant-communications',
+      owner: 'one-covenant',
       description: 'Covenant brand content, articles, social posts, and campaign materials',
       keywords: [
         'content',
@@ -22,14 +22,14 @@ export function loadRegistry(): RepoRoute[] {
       ],
     },
     {
-      repo: 'barry-music-site',
-      owner: 'dwbarnes',
-      description: 'Barry music artist website — tour dates, bio, releases',
+      repo: 'whats-tonight',
+      owner: 'synapz-org',
+      description: "Barry's music website — tour dates, bio, releases",
       keywords: ['barry', 'music', 'website', 'site', 'tour'],
     },
     {
       repo: 'crunchdao-synth',
-      owner: 'dwbarnes',
+      owner: 'synapz-org',
       description: 'CrunchDAO synthetic data model, competition submissions, and scoring',
       keywords: ['crunchdao', 'model', 'score', 'competition', 'synth'],
     },

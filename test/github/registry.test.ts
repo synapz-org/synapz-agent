@@ -15,27 +15,27 @@ describe('loadRegistry', () => {
     }
   });
 
-  it('finds covenant-narrative route with owner snarktank', () => {
+  it('finds covenant-communications route with owner one-covenant', () => {
     const registry = loadRegistry();
-    const route = registry.find((r) => r.repo === 'covenant-narrative');
+    const route = registry.find((r) => r.repo === 'covenant-communications');
     expect(route).toBeDefined();
-    expect(route?.owner).toBe('snarktank');
+    expect(route?.owner).toBe('one-covenant');
   });
 });
 
 describe('routeTask', () => {
-  it('routes a tweet task to covenant-narrative', () => {
+  it('routes a tweet task to covenant-communications', () => {
     const registry = loadRegistry();
     const result = routeTask('Draft a tweet about Templar subnet launch', registry);
     expect(result).not.toBeNull();
-    expect(result?.repo).toBe('covenant-narrative');
+    expect(result?.repo).toBe('covenant-communications');
   });
 
-  it("routes a tour dates task to barry-music-site", () => {
+  it("routes a tour dates task to whats-tonight", () => {
     const registry = loadRegistry();
     const result = routeTask("Update Barry's tour dates page", registry);
     expect(result).not.toBeNull();
-    expect(result?.repo).toBe('barry-music-site');
+    expect(result?.repo).toBe('whats-tonight');
   });
 
   it('returns null when no keywords match', () => {
