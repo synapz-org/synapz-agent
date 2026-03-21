@@ -4,12 +4,11 @@ import { settings } from '../config/settings.js';
 
 export interface BotConfig {
   token: string;
-  covenantGuildId: string;
-  covenantChannelIds: string[];
   synapzGuildId: string;
-  synapzFeedChannelId: string;
-  synapzApprovalsChannelId: string;
-  synapzCommandsChannelId: string;
+  synapzDropboxChannelId: string;    // #dropbox — forward messages here for extraction
+  synapzFeedChannelId: string;       // #agent-feed — digest notifications
+  synapzApprovalsChannelId: string;  // #approvals — PR review
+  synapzCommandsChannelId: string;   // #commands — bot commands
 }
 
 export function createBot(
@@ -28,31 +27,26 @@ export function createBot(
 
   client.on(Events.ClientReady, (readyClient) => {
     console.log(`[bot] Logged in as ${readyClient.user.tag}`);
-    console.log(`[bot] Monitoring channels: ${config.covenantChannelIds.join(', ')}`);
+    console.log(`[bot] Monitoring #dropbox channel: ${config.synapzDropboxChannelId}`);
   });
 
   client.on(Events.MessageCreate, (message: Message) => {
     // Ignore messages from bots
     if (message.author.bot) return;
 
-    // Only process messages from the covenant guild in monitored channels
+    // Only process messages in the dropbox channel on synapz_org
     if (
-      message.guildId !== config.covenantGuildId ||
-      !config.covenantChannelIds.includes(message.channelId)
+      message.guildId !== config.synapzGuildId ||
+      message.channelId !== config.synapzDropboxChannelId
     ) {
       return;
     }
-
-    const channelName =
-      message.channel && 'name' in message.channel
-        ? `#${message.channel.name}`
-        : message.channelId;
 
     batcher.add({
       author: message.member?.displayName ?? message.author.username,
       content: message.content,
       timestamp: message.createdAt.toISOString(),
-      channelName,
+      channelName: '#dropbox',
     });
   });
 

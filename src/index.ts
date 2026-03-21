@@ -38,9 +38,8 @@ async function main(): Promise<void> {
 
   const githubToken = process.env.GITHUB_TOKEN!;
   const discordToken = process.env.DISCORD_BOT_TOKEN!;
-  const covenantGuildId = process.env.COVENANT_GUILD_ID ?? '';
-  const covenantChannelIds = (process.env.COVENANT_CHANNEL_IDS ?? '').split(',').filter(Boolean);
   const synapzGuildId = process.env.SYNAPZ_GUILD_ID ?? '';
+  const synapzDropboxChannelId = process.env.SYNAPZ_DROPBOX_CHANNEL_ID ?? '';
   const synapzFeedChannelId = process.env.SYNAPZ_FEED_CHANNEL_ID ?? '';
   const synapzApprovalsChannelId = process.env.SYNAPZ_APPROVALS_CHANNEL_ID ?? '';
   const synapzCommandsChannelId = process.env.SYNAPZ_COMMANDS_CHANNEL_ID ?? '';
@@ -127,9 +126,8 @@ async function main(): Promise<void> {
   const bot = createBot(
     {
       token: discordToken,
-      covenantGuildId,
-      covenantChannelIds,
       synapzGuildId,
+      synapzDropboxChannelId,
       synapzFeedChannelId,
       synapzApprovalsChannelId,
       synapzCommandsChannelId,
