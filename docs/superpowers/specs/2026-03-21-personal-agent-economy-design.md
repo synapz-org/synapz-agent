@@ -320,13 +320,43 @@ Keywords and descriptions are included in the Claude extraction prompt as contex
 **Covenant server behavior:**
 - Monitors specified channels only
 - Batches messages in configurable windows (default 5 min — short enough for responsiveness, long enough to capture full conversation threads; tunable based on channel activity)
-- Sends batch to Claude API for task extraction
-- High-confidence tasks: creates issue on covenant-narrative directly
+- Sends batch to Claude API for task extraction with the following output schema:
+
+```json
+{
+  "tasks": [
+    {
+      "title": "Amplify Reddit post — Chamath/Bittensor/Templar",
+      "body": "Post in general and bittensor channels requesting upvotes...",
+      "repo": "covenant-narrative",
+      "confidence": 0.9,
+      "urgency": "today",
+      "source": { "author": "kurtwagner0937", "channel": "#comms-chat", "timestamp": "2026-03-19T17:52:00Z" },
+      "source_message": "can you at everyone in general and the bittensor channels to upvote it"
+    }
+  ],
+  "ignored": ["banter", "memes", "off-topic"]
+}
+```
+
+- Confidence threshold: >= 0.7 creates issue directly, < 0.7 posts to synapz_org for confirmation
 - Ambiguous tasks: posts to synapz_org for Derek's confirmation
 - Does not post in Covenant channels unless explicitly configured
 
 **synapz_org server behavior:**
-- `#agent-feed` — Notification digests, worker status updates
+- `#agent-feed` — Notification digests (every 2 hours), worker status updates. Digest format:
+
+```
+Agent Digest — 2026-03-21 14:00
+----
+[v] covenant-narrative: PR #12 opened — "Thread: Chamath on All-In"
+[v] barry-music-site: PR #8 opened — "Add tour dates section"
+crunchdao-synth: Score 0.847 -> 0.851 (3 experiments since last digest)
+[?] covenant-narrative: Issue #34 needs triage — "Evan's autoresearch article"
+Workers: 1/3 slots active (crunchdao-synth running)
+```
+
+Digests replace per-event notifications. Only blocking/urgent items (worker failures, stalled runs) get immediate pings.
 - `#approvals` — PRs awaiting review, react to approve/reject
 - `#commands` — Quick task creation, status queries
 
@@ -473,10 +503,8 @@ OpenClaw remains available as an adapter type if a use case emerges where an alw
 ## Open Questions
 
 1. **Covenant server permissions** — Can Derek add a bot, or does he need Kurt's approval?
-2. **Rate limits** — How many CC sessions can run concurrently on Derek's subscription? May need to stagger workers.
-3. **Cost budget** — What's the acceptable daily/monthly token spend for autonomous workers?
-4. **covenant-narrative agent instructions** — What's already there? Build on it vs. extend it.
-5. **Security** — Workers have git push access. Should PRs require manual merge, or can some be auto-merged (e.g., auto-research improvements that pass tests)?
+2. **Cost budget** — What's the acceptable daily/monthly token spend for autonomous workers?
+3. **covenant-narrative agent instructions** — What's already there? Build on it vs. extend it.
 
 ## Success Criteria
 
