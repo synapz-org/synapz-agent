@@ -1,7 +1,10 @@
-import Anthropic from '@anthropic-ai/sdk';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import type { ExtractedTask, ExtractionResult } from '../types.js';
 import { buildExtractionPrompt, type MessageInput } from './prompt.js';
 import { loadRegistry } from '../github/registry.js';
+
+const execFileAsync = promisify(execFile);
 
 const REQUIRED_FIELDS: (keyof ExtractedTask)[] = [
   'title',
@@ -57,26 +60,27 @@ export function parseExtractionResponse(text: string): ExtractionResult {
 
 export async function extractTasks(
   messages: MessageInput[],
-  apiKey: string,
 ): Promise<ExtractionResult> {
   const registry = loadRegistry();
   const prompt = buildExtractionPrompt(messages, registry);
 
-  const client = new Anthropic({ apiKey });
+  try {
+    const { stdout } = await execFileAsync('claude', [
+      '-p', prompt,
+      '--output-format', 'text',
+      '--model', 'sonnet',
+      '--max-turns', '1',
+      '--no-session-persistence',
+    ], {
+      timeout: 60_000,
+    });
 
-  const response = await client.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 2048,
-    messages: [
-      {
-        role: 'user',
-        content: prompt,
-      },
-    ],
-  });
-
-  const firstContent = response.content[0];
-  const text = firstContent.type === 'text' ? firstContent.text : '';
-
-  return parseExtractionResponse(text);
+    return parseExtractionResponse(stdout);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return {
+      tasks: [],
+      ignored: [`extraction_error: ${message}`],
+    };
+  }
 }

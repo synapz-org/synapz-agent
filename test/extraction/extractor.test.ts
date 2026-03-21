@@ -1,18 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+// Must use vi.hoisted for variables used in vi.mock factories
+const mockExecFileAsync = vi.hoisted(() => vi.fn());
+
+vi.mock('node:child_process', () => ({
+  execFile: vi.fn(),
+}));
+
+vi.mock('node:util', () => ({
+  promisify: () => mockExecFileAsync,
+}));
+
 import { parseExtractionResponse, extractTasks } from '../../src/extraction/extractor.js';
-import type { ExtractionResult } from '../../src/types.js';
-
-// Mock the Anthropic SDK
-const mockCreate = vi.fn();
-
-vi.mock('@anthropic-ai/sdk', () => {
-  return {
-    default: class MockAnthropic {
-      messages = { create: mockCreate };
-      constructor(_opts?: unknown) {}
-    },
-  };
-});
 
 const validTask = {
   title: 'Upvote Templar subnet Reddit post',
@@ -145,10 +144,8 @@ describe('extractTasks', () => {
     vi.clearAllMocks();
   });
 
-  it('calls Claude API and returns parsed tasks', async () => {
-    mockCreate.mockResolvedValueOnce({
-      content: [{ type: 'text', text: validJSON }],
-    });
+  it('calls claude CLI and returns parsed tasks', async () => {
+    mockExecFileAsync.mockResolvedValueOnce({ stdout: validJSON, stderr: '' });
 
     const messages = [
       {
@@ -158,22 +155,39 @@ describe('extractTasks', () => {
       },
     ];
 
-    const result = await extractTasks(messages, 'test-api-key');
+    const result = await extractTasks(messages);
     expect(result.tasks).toHaveLength(1);
     expect(result.tasks[0].title).toBe('Upvote Templar subnet Reddit post');
+
+    // Verify claude was called with correct flags
+    expect(mockExecFileAsync).toHaveBeenCalledWith(
+      'claude',
+      expect.arrayContaining(['--output-format', 'text', '--model', 'sonnet']),
+      expect.any(Object),
+    );
   });
 
-  it('returns empty result when API returns invalid JSON', async () => {
-    mockCreate.mockResolvedValueOnce({
-      content: [{ type: 'text', text: 'I cannot process that.' }],
-    });
+  it('returns empty result when CLI returns invalid output', async () => {
+    mockExecFileAsync.mockResolvedValueOnce({ stdout: 'I cannot process that.', stderr: '' });
 
     const messages = [
       { author: 'AdamW', content: 'lol emojis are wild', timestamp: '2026-03-21T10:30:00Z' },
     ];
 
-    const result = await extractTasks(messages, 'test-api-key');
+    const result = await extractTasks(messages);
     expect(result.tasks).toHaveLength(0);
     expect(result.ignored.some((i) => i.includes('parse_error'))).toBe(true);
+  });
+
+  it('handles CLI execution errors gracefully', async () => {
+    mockExecFileAsync.mockRejectedValueOnce(new Error('claude: command not found'));
+
+    const messages = [
+      { author: 'Kurt', content: 'do the thing', timestamp: '2026-03-21T09:00:00Z' },
+    ];
+
+    const result = await extractTasks(messages);
+    expect(result.tasks).toHaveLength(0);
+    expect(result.ignored.some((i) => i.includes('extraction_error'))).toBe(true);
   });
 });

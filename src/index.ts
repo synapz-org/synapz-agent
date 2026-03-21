@@ -2,7 +2,6 @@ import 'dotenv/config';
 
 const REQUIRED_ENV_VARS = [
   'DISCORD_BOT_TOKEN',
-  'ANTHROPIC_API_KEY',
   'GITHUB_TOKEN',
 ] as const;
 
