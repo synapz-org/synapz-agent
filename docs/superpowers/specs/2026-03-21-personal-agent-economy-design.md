@@ -172,7 +172,12 @@ Supported agent types (initially):
 | `codex-cli` | Alternative to claude-cli, rate limit fallback | `codex -p "..." --cwd /repo` |
 | `openclaw` | Always-on persistent agents (if/when useful) | HTTP request to deployed instance |
 
-New types (Hermes, future frameworks) are added by writing a new adapter module conforming to the three-function interface.
+**Known frameworks to explore:**
+- **Arbos** (github.com/unconst/Arbos) — const's self-improving agent that uses looping for autonomous improvement. Interesting for auto-research style work.
+- **Hermes Agent** (github.com/nousresearch/hermes-agent) — Nous Research's agent framework. Worth evaluating for tasks where open-source inference is preferred.
+- **OpenClaw** — Already deployed for Synapz. Remains an option for always-on persistent agents.
+
+New types are added by writing a new adapter module conforming to the three-function interface. The ecosystem is moving fast — the adapter pattern lets us stay curious and experiment without rebuilding.
 
 ### Worker Result Contract
 
