@@ -500,11 +500,11 @@ This is not a hard cutover. Obsidian continues to exist for notes and knowledge.
 
 OpenClaw remains available as an adapter type if a use case emerges where an always-on persistent agent is genuinely useful. The infrastructure isn't thrown away — it just becomes one option among several.
 
-## Open Questions
+## Resolved Questions
 
-1. **Covenant server permissions** — Can Derek add a bot, or does he need Kurt's approval?
-2. **Cost budget** — What's the acceptable daily/monthly token spend for autonomous workers?
-3. **covenant-narrative agent instructions** — What's already there? Build on it vs. extend it.
+1. **Covenant server permissions** — Derek can add a bot without approval.
+2. **Cost budget** — Claude Max subscription with rarely-hit upper limits. Goal is to regularly hit those limits (maximize token throughput). Build in fallback inference sources (Codex, API, local models) for when limits are reached.
+3. **covenant-narrative agent instructions** — Repo has AGENTS.md (66-line universal quick-start, newest) and CLAUDE.md (399-line deep reference with anti-slop profile, content patterns, workflows). AGENT.md (singular, older) should be deleted as superseded. Workers should build on the existing AGENTS.md + CLAUDE.md pattern, not overwrite.
 
 ## Success Criteria
 
