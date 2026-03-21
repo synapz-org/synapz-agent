@@ -1,0 +1,77 @@
+{
+  "batch1_upvote_request": {
+    "description": "Kurt asking to amplify reddit post — should extract 1 task about upvoting",
+    "messages": [
+      {
+        "author": "Kurt",
+        "content": "hey can someone upvote our reddit post about the Templar subnet launch? we need more visibility on r/bittensor",
+        "timestamp": "2026-03-21T09:15:00Z",
+        "channel": "general"
+      },
+      {
+        "author": "Derek",
+        "content": "on it, dropping the link here",
+        "timestamp": "2026-03-21T09:16:00Z",
+        "channel": "general"
+      },
+      {
+        "author": "Kurt",
+        "content": "https://reddit.com/r/bittensor/comments/abc123 — the post is getting buried, needs amplification asap",
+        "timestamp": "2026-03-21T09:17:00Z",
+        "channel": "general"
+      }
+    ]
+  },
+  "batch2_banter": {
+    "description": "AdamW and Kurt memeing about emojis — should extract 0 tasks",
+    "messages": [
+      {
+        "author": "AdamW",
+        "content": "why does everyone use the 🔥 emoji for everything now lmao",
+        "timestamp": "2026-03-21T10:30:00Z",
+        "channel": "off-topic"
+      },
+      {
+        "author": "Kurt",
+        "content": "because everything IS fire bro 🔥🔥🔥",
+        "timestamp": "2026-03-21T10:31:00Z",
+        "channel": "off-topic"
+      },
+      {
+        "author": "AdamW",
+        "content": "lol fair point, the 💀 emoji is the new lol though",
+        "timestamp": "2026-03-21T10:32:00Z",
+        "channel": "off-topic"
+      },
+      {
+        "author": "Kurt",
+        "content": "💀💀💀 exactly",
+        "timestamp": "2026-03-21T10:33:00Z",
+        "channel": "off-topic"
+      }
+    ]
+  },
+  "batch3_article_offer": {
+    "description": "Evan offering to write autoresearch article — should extract 1 task about article",
+    "messages": [
+      {
+        "author": "Evan",
+        "content": "I can write that autoresearch article for Covenant if you want — I've been deep in the subnet architecture lately",
+        "timestamp": "2026-03-21T14:00:00Z",
+        "channel": "content"
+      },
+      {
+        "author": "Derek",
+        "content": "that would be great, what angle were you thinking?",
+        "timestamp": "2026-03-21T14:02:00Z",
+        "channel": "content"
+      },
+      {
+        "author": "Evan",
+        "content": "something like 'how Bittensor automates AI research at scale' — targeting the covenant-narrative repo for publishing",
+        "timestamp": "2026-03-21T14:04:00Z",
+        "channel": "content"
+      }
+    ]
+  }
+}
