@@ -1,0 +1,14 @@
+name: covenant-content
+repo: ~/Projects/covenant-narrative
+schedule: "0 */4 * * *"
+agent:
+  type: claude-cli
+  prompt_file: .claude/prompts/work-cycle.md
+  max_turns: 50
+  allowed_tools: [Edit, Write, Bash, Grep, Glob, Read]
+triggers:
+  - github_issue_labeled: ready
+notifications:
+  channel: synapz_org#agent-feed
+auto_merge_eligible: false
+max_duration: 1800
