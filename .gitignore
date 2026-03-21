@@ -18,6 +18,9 @@ credentials.yaml
 **/private/
 .private/
 
+# Breach recovery scripts (not part of this project)
+rescue/
+
 # Wallet/crypto
 *.seed
 *.mnemonic
@@ -59,3 +62,4 @@ venv/
 dist/
 build/
 *.log
+logs/

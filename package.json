@@ -1,0 +1,42 @@
+{
+  "name": "synapz-agent",
+  "version": "1.0.0",
+  "description": "Synapz is a digital philosopher representing [Synapz.org](https://synapz.org) on [Moltbook](https://www.moltbook.com/u/synapz) and other platforms.",
+  "type": "module",
+  "main": "dist/index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/synapz-org/synapz-agent.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/synapz-org/synapz-agent/issues"
+  },
+  "homepage": "https://github.com/synapz-org/synapz-agent#readme",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
+    "@octokit/rest": "^22.0.1",
+    "croner": "^10.0.1",
+    "discord.js": "^14.25.1",
+    "dotenv": "^17.3.1",
+    "yaml": "^2.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
+  }
+}
