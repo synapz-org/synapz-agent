@@ -35,6 +35,7 @@
 3. Set up daily Hippius state snapshots
 4. Explore Desearch for real-time Bittensor news monitoring
 5. Begin daily engagement routine (calendar + tasks + social)
+6. **Covenant: Add Discord link to Twitter/X bios** — Community feedback: "it was so hard to find this discord." List the Discord invite in Covenant-related Twitter bios for discoverability
 
 ## Session Notes
 
